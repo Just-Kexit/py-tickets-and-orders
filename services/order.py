@@ -21,6 +21,12 @@ def create_order(
         order.save(update_fields=["created_at"])
 
     for ticket in tickets:
+
+        if not all(k in ticket for k in ("row", "seat", "movie_session")):
+            raise ValueError(
+                "Each ticket must have 'row', 'seat', and 'movie_session'."
+            )
+
         session = MovieSession.objects.get(pk=ticket["movie_session"])
         Ticket.objects.create(
             movie_session=session,
